@@ -1,0 +1,40 @@
+{
+    "success": 1,
+    "query_summary": {
+      "num_reviews": 1,
+      "review_score": 8,
+      "review_score_desc": "Very Positive",
+      "total_positive": 1081818,
+      "total_negative": 161763,
+      "total_reviews": 1243581
+    },
+    "reviews": [
+      {
+        "recommendationid": "169894558",
+        "author": {
+          "steamid": "76561199261639233",
+          "num_games_owned": 27,
+          "num_reviews": 7,
+          "playtime_forever": 9661,
+          "playtime_last_two_weeks": 316,
+          "playtime_at_review": 9345,
+          "last_played": 1722066466
+        },
+        "language": "english",
+        "review": "this community is so nice and helpful, i got a lot of tips on how to uninstall the game and kill myself",
+        "timestamp_created": 1721006613,
+        "timestamp_updated": 1721006613,
+        "voted_up": true,
+        "votes_up": 326,
+        "votes_funny": 137,
+        "weighted_vote_score": "0.949035525321960449",
+        "comment_count": 0,
+        "steam_purchase": true,
+        "received_for_free": false,
+        "written_during_early_access": false,
+        "hidden_in_steam_china": true,
+        "steam_china_location": ""
+      }
+    ],
+    "cursor": "AoIIP3Leh36pjIgF"
+  }
