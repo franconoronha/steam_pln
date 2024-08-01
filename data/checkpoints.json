@@ -2,5 +2,5 @@
     "games": 1000,
     "reviews": 0,
     "cursor": "*",
-    "stop_at": -1
+    "stop_at": 1000
 }

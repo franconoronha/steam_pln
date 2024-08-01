@@ -53,7 +53,16 @@ def get_reviews(game_id, cursor='*', lang=0):
   params['language'] = LANGUAGES[lang]
 
   response = requests.get(url, params=params)
-  data = response.json()
+
+  # Detect and remove BOM if present
+  content = response.content
+  if content.startswith(b'\xef\xbb\xbf'):  # UTF-8 BOM
+      content = content[3:]
+  elif content.startswith(b'\xff\xfe') or content.startswith(b'\xfe\xff'):  # UTF-16 BOM
+      content = content[2:]
+
+  text = content.decode('utf-8')
+  data = json.loads(text)
 
   success = data['success']
   if success == 1:
@@ -74,10 +83,19 @@ def get_reviews(game_id, cursor='*', lang=0):
 
 
 def relevant_info(review, game_id):
+  author_id = -1
+  playtime_at_review = -1
+
+  if 'author' in review:
+    if 'steamid' in review['author']:
+      author_id = review['author']['steamid']
+    if 'playtime_at_review' in review['author']:
+      playtime_at_review = review['author']['playtime_at_review']
+
   info = {
     'game': game_id,
-    'author': review['author']['steamid'],
-    'playtime_at_review': review['author']['playtime_at_review']
+    'author': author_id,
+    'playtime_at_review': playtime_at_review
   }
   for key in PARSE_COLUMNS:
     if key in review:
