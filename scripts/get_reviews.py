@@ -112,7 +112,8 @@ def main():
       checkpoints = {
           'games': 0,
           'reviews': 0,
-          'cursor': '*'
+          'cursor': '*',
+          'stop_at': -1
       }
 
   try:

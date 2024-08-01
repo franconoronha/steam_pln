@@ -1,5 +1,6 @@
 {
     "games": 1000,
-    "reviews": 980,
-    "cursor": "*"
+    "reviews": 0,
+    "cursor": "*",
+    "stop_at": -1
 }

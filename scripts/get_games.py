@@ -25,7 +25,8 @@ def main():
         checkpoints = {
             'games': 0,
             'reviews': 0,
-            'cursor': '*'
+            'cursor': '*',
+            'stop_at': -1
         }
 
     for i in range(checkpoints['games'], len(game_ids)):
