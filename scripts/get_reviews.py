@@ -121,7 +121,6 @@ def main():
   except:
     print('Creating reviews.csv')
     pd.DataFrame(columns=COLUMNS).to_csv('./data/reviews.csv', index=False, sep=';')
-    checkpoints['reviews'] = 0
     checkpoints['cursor'] = '*'
 
   db = TinyDB('./data/games.json')
@@ -132,7 +131,7 @@ def main():
     stop_at = len(ids)
   elif stop_at > len(ids):
     stop_at = len(ids)
-    
+
   for i in range(checkpoints['reviews'], stop_at):
     game_id = ids[i]
     log(f'Getting reviews of game {i+1}/{stop_at}')
