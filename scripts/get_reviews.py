@@ -127,9 +127,15 @@ def main():
   db = TinyDB('./data/games.json')
   ids = [game['steam_appid'] for game in iter(db)]
 
-  for i in range(checkpoints['reviews'], len(ids)):
+  stop_at = checkpoints['stop_at']
+  if stop_at < 0:
+    stop_at = len(ids)
+  elif stop_at > len(ids):
+    stop_at = len(ids)
+    
+  for i in range(checkpoints['reviews'], stop_at):
     game_id = ids[i]
-    log(f'Getting reviews of game {i+1}/{len(ids)}')
+    log(f'Getting reviews of game {i+1}/{stop_at}')
     success = True
     running = True
     cursor = checkpoints['cursor']
