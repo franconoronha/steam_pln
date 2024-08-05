@@ -4,7 +4,7 @@ import pandas as pd
 import time
 from tinydb import TinyDB
 
-INTERVAL = 15
+INTERVAL = 8
 VERBOSE = True
 LANGUAGES = ['brazilian', 'portuguese']
 
@@ -46,13 +46,25 @@ COLUMNS = [
   'playtime_at_review',
 ] + PARSE_COLUMNS
 
+IGNORE = []
+OUTPUT_PATH = './data/reviews_3.csv'
+
 def get_reviews(game_id, cursor='*', lang=0):
   url = f'https://store.steampowered.com/appreviews/{game_id}'
   params = dict(BASE_PARAMS)
   params['cursor'] = cursor
   params['language'] = LANGUAGES[lang]
 
-  response = requests.get(url, params=params)
+  try:
+    response = requests.get(url, params=params)
+  except:
+    log(f'Failed to get {game_id} at cursor {cursor}')
+    return {
+        'success': True,
+        'reviews': [],
+        'cursor': cursor,
+        'retry': True
+    }
 
   # Detect and remove BOM if present
   content = response.content
@@ -109,7 +121,10 @@ def relevant_info(review, game_id):
 
 
 def process_review(text):
-  return text.replace(';', '').replace('\r\n', '').replace('\r', '').replace('\n', '')
+  return text.replace(';', '') \
+             .replace('\r\n', '') \
+             .replace('\r', '') \
+             .replace('\n', '')
 
 
 def log(message):
@@ -135,10 +150,10 @@ def main():
       }
 
   try:
-    pd.read_csv('./data/reviews.csv', sep=';')
+    pd.read_csv(OUTPUT_PATH, sep=';')
   except:
-    print('Creating reviews.csv')
-    pd.DataFrame(columns=COLUMNS).to_csv('./data/reviews.csv', index=False, sep=';')
+    print('Creating reviews csv')
+    pd.DataFrame(columns=COLUMNS).to_csv(OUTPUT_PATH, index=False, sep=';')
     checkpoints['cursor'] = '*'
 
   db = TinyDB('./data/games.json')
@@ -158,10 +173,15 @@ def main():
     cursor = checkpoints['cursor']
 
     while running:
+      if game_id in IGNORE:
+        break
       result = get_reviews(game_id, cursor)
       success = result['success']
 
       if success:
+        if 'retry' in result:
+          log(f'Retrying to get reviews of game {game_id}')
+          continue
         if len(result['reviews']) == 0:
           log(f'No more reviews of game {game_id}')
           checkpoints['cursor'] = '*'
@@ -171,7 +191,7 @@ def main():
 
         reviews = [relevant_info(review, game_id) for review in result['reviews']]
         df = pd.DataFrame(reviews)
-        df.to_csv('./data/reviews.csv', mode='a', header=False, sep=';', index=False)
+        df.to_csv(OUTPUT_PATH, mode='a', header=False, sep=';', index=False)
         save_checkpoints(checkpoints)
       else:
         log(f'Failed to get reviews of game {game_id}')
