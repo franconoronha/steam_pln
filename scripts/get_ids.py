@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import time
 
-with open('./data/steamdb_ids.html', encoding='utf-8') as f:
+with open('./data/steamdb_ids.txt', encoding='utf-8') as f:
     html_doc = f.read()
 
 soup = BeautifulSoup(html_doc, 'html.parser')
