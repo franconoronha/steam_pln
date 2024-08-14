@@ -1,3 +1,7 @@
 /ignore
 *.csv
 *.zip
+.venv/
+reviews/
+models/
+.ipynb_checkpoints/
